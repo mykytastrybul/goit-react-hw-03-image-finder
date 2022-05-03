@@ -9,10 +9,11 @@ class App extends Component {
     inputValue: '',
     modalImg: '',
     showModal: false,
+    page: 1,
   }
 
-  getInputValue = inputValue => {
-    this.setState({ inputValue: inputValue })
+  getInputValue = handleValue => {
+    this.setState({ inputValue: handleValue, page: 1 })
   }
 
   toggleModal = () => {
@@ -24,13 +25,20 @@ class App extends Component {
     this.setState({ modalImg: url });
   }
 
+  loadMoreBtn = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
+
   render() {
-    const { modalImg, showModal } = this.state;
+    const { modalImg, showModal ,page} = this.state;
 
     return (
       <>
-        <Searchbar onSearch={this.getInputValue} />
-        <ImageGallery inputValue={this.state.inputValue} onClick={this.getLargeImg} />
+        <Searchbar getInputValue={this.getInputValue}/>
+        <ImageGallery inputValue={this.state.inputValue} onClick={this.getLargeImg} loadMoreBtn={this.loadMoreBtn} page={ page}/>
         {showModal && <Modal url={modalImg} onClose={this.toggleModal} />}
       </>
     )
